@@ -2,7 +2,9 @@
 from PyQt5.QtCore import *
 from PyQt5.QtWidgets import *
 
+from physical_objects.car import Car
 from ui.color import Color
+from ui.game_widget import GameWidget
 
 GAME_WIDTH = 800
 GAME_HEIGHT = 600
@@ -30,13 +32,14 @@ class MainWindow(QMainWindow):
         central_layout.setContentsMargins(0,0,0,0)
         central_layout.setSpacing(0)
 
-        game_widget = Color('red')
-        button_widget = Color('yellow')
+        # game_widget = Color('black')
+        game_widget = GameWidget(Car(10, 10))
+        button_widget = Color('blue')
 
         central_layout.addWidget(game_widget)
         central_layout.addWidget(button_widget)
 
-        game_widget.setFixedSize(GAME_WIDTH,GAME_HEIGHT)
+        game_widget.setFixedSize(GAME_WIDTH, GAME_HEIGHT)
 
 
         central_widget = QWidget()
