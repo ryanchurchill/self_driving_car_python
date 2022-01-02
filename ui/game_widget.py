@@ -17,7 +17,9 @@ class GameWidget(QWidget):
         self.setPalette(palette)
 
     def paintEvent(self, e):
+        print('paintEvent')
         self.drawCar()
+        # pass
 
     def drawCar(self):
         qp = QPainter()
@@ -27,7 +29,7 @@ class GameWidget(QWidget):
         # TODO: difference between Pen and Brush?
         qp.setPen(color)
         qp.setBrush(color)
-        qp.drawRect(10, 10, 50, 50)
+        qp.drawRect(self.car.position_x, self.car.position_y, Car.CAR_WIDTH, Car.CAR_HEIGHT)
 
 
         qp.end()
