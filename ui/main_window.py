@@ -1,4 +1,5 @@
 # Subclass QMainWindow to customize your application's main window
+from PyQt5 import QtCore
 from PyQt5.QtCore import *
 from PyQt5.QtWidgets import *
 
@@ -38,6 +39,11 @@ class MainWindow(QMainWindow):
         self.setCentralWidget(central_widget)
         central_widget.setLayout(central_layout)
 
+    def keyPressEvent(self, event):
+        print('Key Pressed: ' + str(event.key()))
+        if event.key() == QtCore.Qt.Key_W:
+            self.car.moveForward()
+            self.game_widget.repaint()
 
     def button_pressed(self):
 
