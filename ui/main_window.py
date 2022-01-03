@@ -18,49 +18,26 @@ class MainWindow(QMainWindow):
 
         self.car = Car(50, 50)
         self.game_widget = GameWidget(self.car)
+        button_widget = ButtonWidget(BUTTON_PANEL_HEIGHT)
 
         self.setWindowTitle("Self Driving Car")
         self.setFixedSize(QSize(GAME_WIDTH, GAME_HEIGHT+BUTTON_PANEL_HEIGHT))
 
-        # button: QPushButton = QPushButton("Press Me!")
+        self.game_widget.setFixedSize(GAME_WIDTH, GAME_HEIGHT)
 
-
-        # Set the central widget of the Window.
-        # self.setCentralWidget(button)
-
-
-
+        # layout
         central_layout = QVBoxLayout()
-        central_layout.setContentsMargins(0,0,0,0)
+        central_layout.setContentsMargins(0, 0, 0, 0)
         central_layout.setSpacing(0)
 
-        # game_widget = Color('black')
-
-
-
-
         central_layout.addWidget(self.game_widget)
+        central_layout.addWidget(button_widget)
 
-
-        self.game_widget.setFixedSize(GAME_WIDTH, GAME_HEIGHT)
-        # self.game_widget.setContentsMargins(0,0,0,0)
-
-
+        # central widget
         central_widget = QWidget()
         self.setCentralWidget(central_widget)
         central_widget.setLayout(central_layout)
 
-        button_widget = ButtonWidget()
-        central_layout.addWidget(button_widget)
-        # button_widget.setFixedSize(GAME_WIDTH, BUTTON_PANEL_HEIGHT)
-
-        # button_widget.resize(GAME_WIDTH, GAME_HEIGHT)
-
-        # temp - button testing
-        # button = QPushButton("Press Me!")
-        # button.setCheckable(True)
-        # button.clicked.connect(self.button_pressed)
-        # central_layout.addWidget(button)
 
     def button_pressed(self):
 
