@@ -44,6 +44,12 @@ class MainWindow(QMainWindow):
         if event.key() == QtCore.Qt.Key_W:
             self.car.moveForward()
             self.game_widget.repaint()
+        if event.key() == QtCore.Qt.Key_A:
+            self.car.rotateLeft()
+            # self.game_widget.repaint()
+        if event.key() == QtCore.Qt.Key_D:
+            self.car.rotateRight()
+            # self.game_widget.repaint()
 
     def button_pressed(self):
 
