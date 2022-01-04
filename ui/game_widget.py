@@ -29,8 +29,17 @@ class GameWidget(QWidget):
         # TODO: difference between Pen and Brush?
         qp.setPen(color)
         qp.setBrush(color)
-        qp.drawRect(self.car.position_x, self.car.position_y, Car.CAR_WIDTH, Car.CAR_HEIGHT)
 
+        # rotate around center of front (left side) of un-rotated car
+        qp.translate(self.car.position_x, self.car.position_y)
+        qp.rotate(self.car.angle_deg)
+        qp.translate(-self.car.position_x, -self.car.position_y)
+
+        # upper-left of unrotated car
+        upper_left_x = self.car.position_x
+        upper_left_y = self.car.position_y - (self.car.CAR_HEIGHT / 2)
+        qp.drawRect(upper_left_x, upper_left_y, self.car.CAR_WIDTH, self.car.CAR_HEIGHT)
+        qp.resetTransform()
 
         qp.end()
 
