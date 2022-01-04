@@ -17,7 +17,7 @@ class MainWindow(QMainWindow):
     def __init__(self):
         super().__init__()
 
-        self.car = Car(300, 300)
+        self.car = Car(50, 50)
         self.game_widget = GameWidget(self.car)
         button_widget = ButtonWidget(BUTTON_PANEL_HEIGHT)
 

@@ -2,6 +2,7 @@ from PyQt5.QtGui import QPainter, QColor, QPalette
 from PyQt5.QtWidgets import *
 
 from physical_objects.car import Car
+from physical_objects.sensor_type import SensorType
 
 
 class GameWidget(QWidget):
@@ -40,6 +41,16 @@ class GameWidget(QWidget):
         upper_left_y = self.car.position_y - (self.car.CAR_HEIGHT / 2)
         qp.drawRect(upper_left_x, upper_left_y, self.car.CAR_WIDTH, self.car.CAR_HEIGHT)
         qp.resetTransform()
+
+        # middle sensor
+        coords = self.car.getSensorCoordinates(SensorType.MIDDLE)
+        qp.setPen(QColor('red'))
+        qp.setBrush(QColor('red'))
+        qp.drawEllipse(
+            coords[0] - self.car.SENSOR_RADIUS,
+            coords[1] - self.car.SENSOR_RADIUS,
+            self.car.SENSOR_RADIUS * 2,
+            self.car.SENSOR_RADIUS * 2)
 
         qp.end()
 
