@@ -42,16 +42,25 @@ class GameWidget(QWidget):
         qp.drawRect(upper_left_x, upper_left_y, self.car.CAR_WIDTH, self.car.CAR_HEIGHT)
         qp.resetTransform()
 
-        # middle sensor
-        coords = self.car.getSensorCoordinates(SensorType.MIDDLE)
-        qp.setPen(QColor('red'))
-        qp.setBrush(QColor('red'))
-        qp.drawEllipse(
-            coords[0] - self.car.SENSOR_RADIUS,
-            coords[1] - self.car.SENSOR_RADIUS,
-            self.car.SENSOR_RADIUS * 2,
-            self.car.SENSOR_RADIUS * 2)
+        # sensors
+        point = self.car.getSensorCoordinates(SensorType.LEFT)
+        self.drawSensor(qp, point, 'blue')
+        point = self.car.getSensorCoordinates(SensorType.MIDDLE)
+        self.drawSensor(qp, point, 'red')
+        point = self.car.getSensorCoordinates(SensorType.RIGHT)
+        self.drawSensor(qp, point, 'yellow')
+
+        center_point = self.car.getSensorCoordinates(SensorType.MIDDLE)
+
+
 
         qp.end()
 
-
+    def drawSensor(self, qp: QPainter, center_point, color):
+        qp.setPen(QColor(color))
+        qp.setBrush(QColor(color))
+        qp.drawEllipse(
+            center_point[0] - self.car.SENSOR_RADIUS,
+            center_point[1] - self.car.SENSOR_RADIUS,
+            self.car.SENSOR_RADIUS * 2,
+            self.car.SENSOR_RADIUS * 2)
