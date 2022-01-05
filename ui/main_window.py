@@ -57,7 +57,8 @@ class MainWindow(QMainWindow):
             self.car.rotateRight()
             self.game_widget.repaint()
 
-    def mousePressEvent(self, event: QtGui.QMouseEvent) -> None:
+    def mouseMoveEvent(self, event: QtGui.QMouseEvent) -> None:
+        # todo: this implementation is way too slow
         self.sand.add_sand_circle(event.x(), event.y(), self.SAND_PAINTER_RADIUS)
         self.game_widget.repaint()
 
