@@ -2,14 +2,14 @@ from PyQt5.QtGui import QPainter, QColor, QPalette
 from PyQt5.QtWidgets import *
 
 from physical_objects.car import Car
+from physical_objects.sand import Sand
 from physical_objects.sensor_type import SensorType
 
-
 class GameWidget(QWidget):
-
-    def __init__(self, car: Car):
+    def __init__(self, car: Car, sand: Sand):
         super(GameWidget, self).__init__()
         self.car = car
+        self.sand = sand
 
         # make background black
         self.setAutoFillBackground(True)
@@ -20,6 +20,7 @@ class GameWidget(QWidget):
     def paintEvent(self, e):
         print('paintEvent')
         self.drawCar()
+        self.drawSand()
         # pass
 
     def drawCar(self):
@@ -48,11 +49,7 @@ class GameWidget(QWidget):
         point = self.car.getSensorCoordinates(SensorType.MIDDLE)
         self.drawSensor(qp, point, 'red')
         point = self.car.getSensorCoordinates(SensorType.RIGHT)
-        self.drawSensor(qp, point, 'yellow')
-
-        center_point = self.car.getSensorCoordinates(SensorType.MIDDLE)
-
-
+        self.drawSensor(qp, point, 'green')
 
         qp.end()
 
@@ -64,3 +61,18 @@ class GameWidget(QWidget):
             center_point[1] - self.car.SENSOR_RADIUS,
             self.car.SENSOR_RADIUS * 2,
             self.car.SENSOR_RADIUS * 2)
+
+    def drawSand(self):
+        qp = QPainter()
+        qp.begin(self)
+
+        color = QColor('yellow')
+        qp.setPen(color)
+        qp.setBrush(color)
+
+        for y in range(self.sand.height):
+            for x in range(self.sand.width):
+                if self.sand.sand[x, y] == 1:
+                    qp.drawPoint(x, y)
+
+        qp.end()
