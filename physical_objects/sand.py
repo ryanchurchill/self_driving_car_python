@@ -3,9 +3,9 @@ import numpy as np
 class Sand:
     def __init__(self, width, height):
         # 2d array of x,y
-        self.sand = np.zeros(shape=(width, height))
         self.width = width
         self.height = height
+        self.clear()
 
     def add_sand_circle(self, center_x, center_y, radius):
         points_in_circle = self.get_points_in_circle(center_x, center_y, radius)
@@ -14,6 +14,9 @@ class Sand:
 
     def add_sand_pixel(self, x, y):
         self.sand[x][y] = 1
+
+    def clear(self):
+        self.sand = np.zeros(shape=(self.width, self.height))
 
     def get_points_in_circle(self, center_x, center_y, radius):
         ret = []

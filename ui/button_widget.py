@@ -1,13 +1,21 @@
 from PyQt5.QtGui import QPalette, QColor
 from PyQt5.QtWidgets import QHBoxLayout, QPushButton, QWidget
 
+from ui.game_widget import GameWidget
+
+
 class ButtonWidget(QWidget):
-    def __init__(self, height):
+    def __init__(self, height, game_widget: GameWidget):
         super(ButtonWidget, self).__init__()
+        self.game_widget = game_widget
 
         layout = QHBoxLayout(self)
 
         buttons = []
+
+        btn_clear = QPushButton('Clear')
+        buttons.append(btn_clear)
+        btn_clear.clicked.connect(self.btn_clear_clicked)
 
         btn_play = QPushButton('Play')
         buttons.append(btn_play)
@@ -46,3 +54,7 @@ class ButtonWidget(QWidget):
         palette = self.palette()
         palette.setColor(QPalette.Window, QColor('blue'))
         self.setPalette(palette)
+
+    def btn_clear_clicked(self):
+        self.game_widget.sand.clear()
+        self.game_widget.repaint()

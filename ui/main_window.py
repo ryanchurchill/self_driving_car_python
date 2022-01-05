@@ -6,7 +6,6 @@ from PyQt5.QtWidgets import *
 from physical_objects.car import Car
 from physical_objects.sand import Sand
 from ui.button_widget import ButtonWidget
-from ui.color import Color
 from ui.game_widget import GameWidget
 
 class MainWindow(QMainWindow):
@@ -22,7 +21,7 @@ class MainWindow(QMainWindow):
         self.sand = Sand(self.GAME_WIDTH, self.GAME_HEIGHT)
 
         self.game_widget = GameWidget(self.car, self.sand)
-        button_widget = ButtonWidget(self.BUTTON_PANEL_HEIGHT)
+        button_widget = ButtonWidget(self.BUTTON_PANEL_HEIGHT, self.game_widget)
 
         self.setWindowTitle("Self Driving Car")
         self.setFixedSize(QSize(self.GAME_WIDTH, self.GAME_HEIGHT + self.BUTTON_PANEL_HEIGHT))
