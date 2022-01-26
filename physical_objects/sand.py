@@ -39,3 +39,8 @@ class Sand:
 
         return ret
 
+    def save_to_file(self):
+        np.save('sand.npy', self.sand)
+
+    def load_from_file(self):
+        self.sand = np.load('sand.npy')

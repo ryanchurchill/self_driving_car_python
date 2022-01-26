@@ -13,21 +13,22 @@ class ButtonWidget(QWidget):
 
         buttons = []
 
-        btn_clear = QPushButton('Clear')
-        buttons.append(btn_clear)
-        btn_clear.clicked.connect(self.btn_clear_clicked)
-
-        btn_play = QPushButton('Play')
-        buttons.append(btn_play)
-        btn_pause = QPushButton('Pause')
-        buttons.append(btn_pause)
+        btn_start_brain = QPushButton('Start Brain')
+        buttons.append(btn_start_brain)
+        btn_pause_brain = QPushButton('Pause Brain')
+        buttons.append(btn_pause_brain)
         btn_save_brain = QPushButton('Save Brain')
         buttons.append(btn_save_brain)
         btn_load_brain = QPushButton('Load Brain')
         buttons.append(btn_load_brain)
+        btn_clear_sand = QPushButton('Clear Sand')
+        buttons.append(btn_clear_sand)
+        btn_clear_sand.clicked.connect(self.btn_clear_clicked)
         btn_save_sand = QPushButton('Save Sand')
+        btn_save_sand.clicked.connect(self.game_widget.sand.save_to_file)
         buttons.append(btn_save_sand)
         btn_load_sand = QPushButton('Load Sand')
+        btn_load_sand.clicked.connect(self.btn_load_sand_clicked)
         buttons.append(btn_load_sand)
 
         for button in buttons:
@@ -57,4 +58,8 @@ class ButtonWidget(QWidget):
 
     def btn_clear_clicked(self):
         self.game_widget.sand.clear()
+        self.game_widget.repaint()
+
+    def btn_load_sand_clicked(self):
+        self.game_widget.sand.load_from_file()
         self.game_widget.repaint()
