@@ -1,17 +1,17 @@
-from PyQt5.QtCore import QTimer
 from PyQt5.QtGui import QPainter, QColor, QPalette
 from PyQt5.QtWidgets import *
+from PyQt5 import QtCore, QtGui
 
-# from ai.random_brain import RandomBrain
 from physical_objects.car import Car
 from physical_objects.sand import Sand
 from physical_objects.sensor_type import SensorType
 
+
 class GameWidget(QWidget):
-    def __init__(self, car: Car, sand: Sand):
+    def __init__(self, game_width, game_height):
         super(GameWidget, self).__init__()
-        self.car = car
-        self.sand = sand
+        self.car = Car(50, 50)
+        self.sand = Sand(game_width, game_height)
 
         # make background black
         self.setAutoFillBackground(True)
@@ -24,6 +24,8 @@ class GameWidget(QWidget):
         # self.ai_timer = QTimer()
         # self.ai = RandomBrain()
         # self.ai_timer.timeout.connect(self.ai.make_next_move)
+
+    # DRAWING
 
     def paintEvent(self, e):
         print('paintEvent')
@@ -84,3 +86,30 @@ class GameWidget(QWidget):
                     qp.drawPoint(x, y)
 
         qp.end()
+
+    # HANDLING INPUT
+    def handleKeyPressEvent(self, event):
+        print('Key Pressed: ' + str(event.key()))
+        if event.key() == QtCore.Qt.Key_W:
+            self.car.moveForward()
+            self.repaint()
+
+            #test
+            # self.sand.add_sand_circle(700, 200, 30)
+        if event.key() == QtCore.Qt.Key_A:
+            self.car.rotateLeft()
+            self.repaint()
+        if event.key() == QtCore.Qt.Key_D:
+            self.car.rotateRight()
+            self.repaint()
+
+    def handleMouseMoveEvent(self, event: QtGui.QMouseEvent) -> None:
+        # todo: this implementation is way too slow
+        self.sand.add_sand_circle(event.x(), event.y(), self.SAND_PAINTER_RADIUS)
+        self.game_widget.repaint()
+
+    def button_pressed(self):
+
+        # print("Clicked!")
+        self.car.position_x += 10
+        self.game_widget.repaint()

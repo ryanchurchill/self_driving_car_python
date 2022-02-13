@@ -3,8 +3,6 @@ from PyQt5 import QtCore, QtGui
 from PyQt5.QtCore import *
 from PyQt5.QtWidgets import *
 
-from physical_objects.car import Car
-from physical_objects.sand import Sand
 from ui.button_widget import ButtonWidget
 from ui.game_widget import GameWidget
 
@@ -17,10 +15,7 @@ class MainWindow(QMainWindow):
     def __init__(self):
         super().__init__()
 
-        self.car = Car(50, 50)
-        self.sand = Sand(self.GAME_WIDTH, self.GAME_HEIGHT)
-
-        self.game_widget = GameWidget(self.car, self.sand)
+        self.game_widget = GameWidget(self.GAME_WIDTH, self.GAME_HEIGHT)
         button_widget = ButtonWidget(self.BUTTON_PANEL_HEIGHT, self.game_widget)
 
         self.setWindowTitle("Self Driving Car")
@@ -42,27 +37,7 @@ class MainWindow(QMainWindow):
         central_widget.setLayout(central_layout)
 
     def keyPressEvent(self, event):
-        print('Key Pressed: ' + str(event.key()))
-        if event.key() == QtCore.Qt.Key_W:
-            self.car.moveForward()
-            self.game_widget.repaint()
-
-            #test
-            # self.sand.add_sand_circle(700, 200, 30)
-        if event.key() == QtCore.Qt.Key_A:
-            self.car.rotateLeft()
-            self.game_widget.repaint()
-        if event.key() == QtCore.Qt.Key_D:
-            self.car.rotateRight()
-            self.game_widget.repaint()
+        self.game_widget.handleKeyPressEvent(event)
 
     def mouseMoveEvent(self, event: QtGui.QMouseEvent) -> None:
-        # todo: this implementation is way too slow
-        self.sand.add_sand_circle(event.x(), event.y(), self.SAND_PAINTER_RADIUS)
-        self.game_widget.repaint()
-
-    def button_pressed(self):
-
-        # print("Clicked!")
-        self.car.position_x += 10
-        self.game_widget.repaint()
+        self.game_widget.handleMouseMoveEvent(event)
