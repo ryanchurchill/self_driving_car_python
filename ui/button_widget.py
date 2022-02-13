@@ -15,6 +15,7 @@ class ButtonWidget(QWidget):
 
         btn_start_brain = QPushButton('Start Brain')
         buttons.append(btn_start_brain)
+        btn_start_brain.clicked.connect(self.btn_start_brain_clicked)
         btn_pause_brain = QPushButton('Pause Brain')
         buttons.append(btn_pause_brain)
         btn_save_brain = QPushButton('Save Brain')
@@ -55,6 +56,10 @@ class ButtonWidget(QWidget):
         palette = self.palette()
         palette.setColor(QPalette.Window, QColor('blue'))
         self.setPalette(palette)
+
+    def btn_start_brain_clicked(self):
+        self.game_widget.ai_timer.startTimer(500)
+
 
     def btn_clear_clicked(self):
         self.game_widget.sand.clear()

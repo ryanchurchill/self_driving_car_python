@@ -1,6 +1,8 @@
+from PyQt5.QtCore import QTimer
 from PyQt5.QtGui import QPainter, QColor, QPalette
 from PyQt5.QtWidgets import *
 
+# from ai.random_brain import RandomBrain
 from physical_objects.car import Car
 from physical_objects.sand import Sand
 from physical_objects.sensor_type import SensorType
@@ -16,6 +18,12 @@ class GameWidget(QWidget):
         palette = self.palette()
         palette.setColor(QPalette.Window, QColor('black'))
         self.setPalette(palette)
+
+        # ai timer
+        # TODO: probably doesn't make sense for AI Timer here but event processing in main_window
+        # self.ai_timer = QTimer()
+        # self.ai = RandomBrain()
+        # self.ai_timer.timeout.connect(self.ai.make_next_move)
 
     def paintEvent(self, e):
         print('paintEvent')

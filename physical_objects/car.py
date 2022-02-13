@@ -1,5 +1,6 @@
 import math
 
+from physical_objects.car_move import CarMove
 from physical_objects.sensor_type import SensorType
 
 
@@ -34,6 +35,14 @@ class Car:
 
     def rotateRight(self):
         self.setAngleDeg(self.angle_deg + self.ROTATION_INCREMENT_DEG)
+
+    def makeMove(self, move: CarMove):
+        if move == CarMove.LEFT:
+            self.rotateLeft()
+        elif move == CarMove.RIGHT:
+            self.rotateRight()
+        elif move == CarMove.FORWARD:
+            self.moveForward()
 
     def setAngleDeg(self, angle_deg):
         self.angle_deg = angle_deg
