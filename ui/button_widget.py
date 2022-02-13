@@ -58,7 +58,7 @@ class ButtonWidget(QWidget):
         self.setPalette(palette)
 
     def btn_start_brain_clicked(self):
-        self.game_widget.ai_timer.startTimer(500)
+        self.game_widget.ai_timer.start(100)
 
 
     def btn_clear_clicked(self):

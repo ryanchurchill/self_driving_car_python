@@ -1,11 +1,18 @@
+from PyQt5.QtCore import QTimer
 from PyQt5.QtGui import QPainter, QColor, QPalette
 from PyQt5.QtWidgets import *
 from PyQt5 import QtCore, QtGui
 
+from ai.random_brain import RandomBrain
 from physical_objects.car import Car
 from physical_objects.sand import Sand
 from physical_objects.sensor_type import SensorType
 
+# This class is responsible for:
+# initializing the objects and game logic
+# drawing the objects
+# handling input
+# processing the brain
 
 class GameWidget(QWidget):
     def __init__(self, game_width, game_height):
@@ -20,13 +27,11 @@ class GameWidget(QWidget):
         self.setPalette(palette)
 
         # ai timer
-        # TODO: probably doesn't make sense for AI Timer here but event processing in main_window
-        # self.ai_timer = QTimer()
-        # self.ai = RandomBrain()
-        # self.ai_timer.timeout.connect(self.ai.make_next_move)
+        self.ai_timer = QTimer()
+        self.ai_timer.timeout.connect(self.make_next_brain_move)
+        self.ai = RandomBrain(self.car, self.sand)
 
     # DRAWING
-
     def paintEvent(self, e):
         print('paintEvent')
         self.drawCar()
@@ -87,7 +92,7 @@ class GameWidget(QWidget):
 
         qp.end()
 
-    # HANDLING INPUT
+    # INPUT HANDLING
     def handleKeyPressEvent(self, event):
         print('Key Pressed: ' + str(event.key()))
         if event.key() == QtCore.Qt.Key_W:
@@ -113,3 +118,10 @@ class GameWidget(QWidget):
         # print("Clicked!")
         self.car.position_x += 10
         self.game_widget.repaint()
+
+    # BRAIN HANDLING
+
+    def make_next_brain_move(self):
+        next_move = self.ai.decide_next_move()
+        self.car.makeMove(next_move)
+        self.repaint()
