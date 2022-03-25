@@ -41,6 +41,6 @@ class DeepQBrain:
     def calculate_orientation(self):
         car_to_goal_vector = Point(self.current_goal.x - self.car.position_x, self.current_goal.y - self.car.position_y)
         car_position_vector = self.car.getSensorVector(SensorType.MIDDLE)
-        return MathUtil.angle_between_vectors_deg(car_position_vector, car_to_goal_vector)
+        return MathUtil.rotation_between_vectors_deg(car_position_vector, car_to_goal_vector)
 
 
