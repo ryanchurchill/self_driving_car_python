@@ -140,7 +140,8 @@ class GameWidget(QWidget):
     def is_car_on_sand(self) -> bool:
         return self.sand.sand[int(self.car.position_x)][int(self.car.position_y)] > 0
 
-    def get_sensor_value(self, sensor_type: SensorType):
+    #normalized to 0->1
+    def get_sensor_value(self, sensor_type: SensorType) -> float :
         # int(np.sum(sand[int(self.sensor1_x)-10:int(self.sensor1_x)+10, int(self.sensor1_y)-10:int(self.sensor1_y)+10]))/400.
 
         sensor_position: Point = self.car.getSensorCoordinates(sensor_type)
