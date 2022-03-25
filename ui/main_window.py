@@ -10,7 +10,6 @@ class MainWindow(QMainWindow):
     GAME_WIDTH = 800
     GAME_HEIGHT = 600
     BUTTON_PANEL_HEIGHT = 100
-    SAND_PAINTER_RADIUS = 10
 
     def __init__(self):
         super().__init__()

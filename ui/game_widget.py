@@ -20,6 +20,8 @@ import numpy as np
 # processing the brain
 
 class GameWidget(QWidget):
+    SAND_PAINTER_RADIUS = 10
+
     def __init__(self, game_width, game_height):
         super(GameWidget, self).__init__()
         self.car = Car(50, 50)
@@ -116,7 +118,7 @@ class GameWidget(QWidget):
     def handleMouseMoveEvent(self, event: QtGui.QMouseEvent) -> None:
         # todo: this implementation is way too slow
         self.sand.add_sand_circle(event.x(), event.y(), self.SAND_PAINTER_RADIUS)
-        self.game_widget.repaint()
+        self.repaint()
 
     def button_pressed(self):
 
