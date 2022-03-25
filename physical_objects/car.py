@@ -25,7 +25,7 @@ class Car:
         # storage of past events
         self.last_rotation: CarMove
 
-    def moveForward(self):
+    def __moveForward(self):
         # straight left movement vector, assuming angle of 0
         movement_vector = (-self.speed, 0)
 
@@ -36,19 +36,19 @@ class Car:
         self.position_x = self.position_x + movement_vector[0]
         self.position_y = self.position_y + movement_vector[1]
 
-    def rotateLeft(self):
+    def __rotateLeft(self):
         self.setAngleDeg(self.angle_deg - self.ROTATION_INCREMENT_DEG)
 
-    def rotateRight(self):
+    def __rotateRight(self):
         self.setAngleDeg(self.angle_deg + self.ROTATION_INCREMENT_DEG)
 
     def makeMove(self, move: CarMove):
         if move == CarMove.LEFT:
-            self.rotateLeft()
+            self.__rotateLeft()
         elif move == CarMove.RIGHT:
-            self.rotateRight()
+            self.__rotateRight()
         elif move == CarMove.FORWARD:
-            self.moveForward()
+            self.__moveForward()
 
     def setAngleDeg(self, angle_deg):
         self.angle_deg = angle_deg
@@ -80,6 +80,8 @@ class Car:
         y = point[0] * sin_a + point[1] * cos_a
 
         return x, y
+
+
 
 
 

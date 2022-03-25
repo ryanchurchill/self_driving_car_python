@@ -7,6 +7,7 @@ from ai.random_brain import RandomBrain
 from physical_objects.car import Car
 from physical_objects.sand import Sand
 from physical_objects.sensor_type import SensorType
+from physical_objects.car_move import CarMove
 
 # This class is responsible for:
 # initializing the objects and game logic
@@ -96,16 +97,15 @@ class GameWidget(QWidget):
     def handleKeyPressEvent(self, event):
         print('Key Pressed: ' + str(event.key()))
         if event.key() == QtCore.Qt.Key_W:
-            self.car.moveForward()
+            self.move_car(CarMove.FORWARD)
             self.repaint()
-
             #test
             # self.sand.add_sand_circle(700, 200, 30)
         if event.key() == QtCore.Qt.Key_A:
-            self.car.rotateLeft()
+            self.move_car(CarMove.LEFT)
             self.repaint()
         if event.key() == QtCore.Qt.Key_D:
-            self.car.rotateRight()
+            self.move_car(CarMove.RIGHT)
             self.repaint()
 
     def handleMouseMoveEvent(self, event: QtGui.QMouseEvent) -> None:
@@ -119,9 +119,22 @@ class GameWidget(QWidget):
         self.car.position_x += 10
         self.game_widget.repaint()
 
+    # CAR HANDLING
+    def move_car(self, move: CarMove):
+        if self.is_car_on_sand():
+            self.car.speed = Car.SAND_SPEED
+        else:
+            self.car.speed = Car.DEFAULT_SPEED
+
+        self.car.makeMove(move)
+
+    def is_car_on_sand(self) -> bool:
+        return False
+
     # BRAIN HANDLING
 
     def make_next_brain_move(self):
         next_move = self.ai.decide_next_move()
         self.car.makeMove(next_move)
         self.repaint()
+
