@@ -2,7 +2,8 @@ import math
 
 from physical_objects.car_move import CarMove
 from physical_objects.sensor_type import SensorType
-
+from util.point import Point
+from util.math_util import MathUtil
 
 class Car:
     CAR_WIDTH = 25
@@ -27,14 +28,14 @@ class Car:
 
     def __moveForward(self):
         # straight left movement vector, assuming angle of 0
-        movement_vector = (-self.speed, 0)
+        movement_vector = Point(-self.speed, 0)
 
         # rotate
-        movement_vector = self.rotateVectorClockwise(movement_vector, self.angle_deg)
+        movement_vector = MathUtil.rotate_vector_clockwise(movement_vector, self.angle_deg)
         # print(movement_vector)
 
-        self.position_x = self.position_x + movement_vector[0]
-        self.position_y = self.position_y + movement_vector[1]
+        self.position_x = self.position_x + movement_vector.x
+        self.position_y = self.position_y + movement_vector.y
 
     def __rotateLeft(self):
         self.setAngleDeg(self.angle_deg - self.ROTATION_INCREMENT_DEG)
@@ -58,9 +59,13 @@ class Car:
             self.angle_deg -= 360
 
     # center of the circle
-    def getSensorCoordinates(self, sensor_type: SensorType):
+    def getSensorCoordinates(self, sensor_type: SensorType) -> Point:
+        sensor_vector = self.getSensorVector(sensor_type)
+        return Point(self.position_x + sensor_vector.x, self.position_y + sensor_vector.y)
+
+    def getSensorVector(self, sensor_type: SensorType) -> Point:
         # straight line pointing left
-        sensor_vector = (-self.SENSOR_DISTANCE, 0)
+        sensor_vector = Point(-self.SENSOR_DISTANCE, 0)
 
         additional_angle_deg = 0
         if sensor_type == SensorType.LEFT:
@@ -68,18 +73,10 @@ class Car:
         elif sensor_type == SensorType.RIGHT:
             additional_angle_deg = 45
 
-        sensor_vector = self.rotateVectorClockwise(sensor_vector, self.angle_deg + additional_angle_deg)
+        return MathUtil.rotate_vector_clockwise(sensor_vector, (self.angle_deg + additional_angle_deg))
 
-        return (self.position_x + sensor_vector[0], self.position_y + sensor_vector[1])
 
-    def rotateVectorClockwise(self, point, angle_deg):
-        angle_rad = math.radians(angle_deg)
-        cos_a = math.cos(angle_rad)
-        sin_a = math.sin(angle_rad)
-        x = point[0] * cos_a + point[1] * sin_a
-        y = point[0] * sin_a + point[1] * cos_a
 
-        return x, y
 
 
 

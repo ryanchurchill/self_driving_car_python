@@ -1,5 +1,5 @@
 from enum import Enum, auto
 class SensorType(Enum):
-    LEFT = auto()
-    MIDDLE = auto()
-    RIGHT = auto()
+    LEFT = 1
+    MIDDLE = 2
+    RIGHT = 3

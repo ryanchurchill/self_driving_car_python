@@ -1,6 +1,6 @@
 from enum import Enum
 
 class CarMove(Enum):
-    LEFT = 1
-    FORWARD = 2
-    RIGHT = 3
+    LEFT = 0
+    FORWARD = 1
+    RIGHT = 2

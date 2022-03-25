@@ -3,11 +3,15 @@ from PyQt5.QtGui import QPainter, QColor, QPalette
 from PyQt5.QtWidgets import *
 from PyQt5 import QtCore, QtGui
 
+from ai.deep_q_brain import DeepQBrain
 from ai.random_brain import RandomBrain
 from physical_objects.car import Car
 from physical_objects.sand import Sand
 from physical_objects.sensor_type import SensorType
 from physical_objects.car_move import CarMove
+from util.point import Point
+
+import numpy as np
 
 # This class is responsible for:
 # initializing the objects and game logic
@@ -30,7 +34,8 @@ class GameWidget(QWidget):
         # ai timer
         self.ai_timer = QTimer()
         self.ai_timer.timeout.connect(self.make_next_brain_move)
-        self.ai = RandomBrain(self.car, self.sand)
+        # self.ai = RandomBrain(self.car, self.sand)
+        self.ai = DeepQBrain(self.car, self.sand, [Point(game_width, game_height)])
 
     # DRAWING
     def paintEvent(self, e):
@@ -69,12 +74,12 @@ class GameWidget(QWidget):
 
         qp.end()
 
-    def drawSensor(self, qp: QPainter, center_point, color):
+    def drawSensor(self, qp: QPainter, center_point: Point, color):
         qp.setPen(QColor(color))
         qp.setBrush(QColor(color))
         qp.drawEllipse(
-            center_point[0] - self.car.SENSOR_RADIUS,
-            center_point[1] - self.car.SENSOR_RADIUS,
+            center_point.x - self.car.SENSOR_RADIUS,
+            center_point.y - self.car.SENSOR_RADIUS,
             self.car.SENSOR_RADIUS * 2,
             self.car.SENSOR_RADIUS * 2)
 
@@ -119,8 +124,10 @@ class GameWidget(QWidget):
         self.car.position_x += 10
         self.game_widget.repaint()
 
-    # CAR HANDLING
+    # CAR HANDLING / SENSING - consider moving these to Car and pass sand to the methods
     def move_car(self, move: CarMove):
+        # mess with car if it's on sand
+        # this just slows it down, but the tutorial also changes its angle
         if self.is_car_on_sand():
             self.car.speed = Car.SAND_SPEED
         else:
@@ -131,10 +138,23 @@ class GameWidget(QWidget):
     def is_car_on_sand(self) -> bool:
         return self.sand.sand[int(self.car.position_x)][int(self.car.position_y)] > 0
 
+    def get_sensor_value(self, sensor_type: SensorType):
+        # int(np.sum(sand[int(self.sensor1_x)-10:int(self.sensor1_x)+10, int(self.sensor1_y)-10:int(self.sensor1_y)+10]))/400.
+
+        sensor_position: Point = self.car.getSensorCoordinates(sensor_type)
+        return int(np.sum(
+            self.sand.sand[int(sensor_position.x)-10:int(sensor_position.x)+10,
+            int(sensor_position.y)-10:int(sensor_position.y)+10])
+        )/400
+
     # BRAIN HANDLING
 
     def make_next_brain_move(self):
-        next_move = self.ai.decide_next_move()
-        self.car.makeMove(next_move)
-        self.repaint()
+        # next_move = self.ai.decide_next_move()
+        # self.car.makeMove(next_move)
+        # self.repaint()
+        self.ai.decide_next_move(
+            self.get_sensor_value(SensorType.LEFT),
+            self.get_sensor_value(SensorType.MIDDLE),
+            self.get_sensor_value(SensorType.RIGHT))
 
