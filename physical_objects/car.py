@@ -7,21 +7,27 @@ from physical_objects.sensor_type import SensorType
 class Car:
     CAR_WIDTH = 25
     CAR_HEIGHT = 10
-    ROTATION_INCREMENT_DEG = 15
-    MOVEMENT_INCREMENT = 5
+    ROTATION_INCREMENT_DEG = 20
+    DEFAULT_SPEED = 6
+    SAND_SPEED = 1
     SENSOR_DISTANCE = 15
     SENSOR_RADIUS = 4
 
-    def __init__(self, position_x, position_y):
+    def __init__(self, position_x: int, position_y: int):
         # position is the center of the front of the car
         self.position_x = position_x
         self.position_y = position_y
-        # angle between y-axis and front of car
-        self.angle_deg = 0
+        # angle between x-axis and front of car - 0 means facing left
+        self.angle_deg: int = 0
+
+        self.speed = self.DEFAULT_SPEED
+
+        # storage of past events
+        self.last_rotation: CarMove
 
     def moveForward(self):
         # straight left movement vector, assuming angle of 0
-        movement_vector = (-self.MOVEMENT_INCREMENT, 0)
+        movement_vector = (-self.speed, 0)
 
         # rotate
         movement_vector = self.rotateVectorClockwise(movement_vector, self.angle_deg)
