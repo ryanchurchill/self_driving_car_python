@@ -34,7 +34,7 @@ class GameWidget(QWidget):
 
     # DRAWING
     def paintEvent(self, e):
-        print('paintEvent')
+        # print('paintEvent')
         self.drawCar()
         self.drawSand()
         # pass
@@ -95,7 +95,7 @@ class GameWidget(QWidget):
 
     # INPUT HANDLING
     def handleKeyPressEvent(self, event):
-        print('Key Pressed: ' + str(event.key()))
+        # print('Key Pressed: ' + str(event.key()))
         if event.key() == QtCore.Qt.Key_W:
             self.move_car(CarMove.FORWARD)
             self.repaint()
@@ -129,7 +129,7 @@ class GameWidget(QWidget):
         self.car.makeMove(move)
 
     def is_car_on_sand(self) -> bool:
-        return False
+        return self.sand.sand[int(self.car.position_x)][int(self.car.position_y)] > 0
 
     # BRAIN HANDLING
 

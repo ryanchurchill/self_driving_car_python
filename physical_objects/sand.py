@@ -5,6 +5,7 @@ class Sand:
         # 2d array of x,y
         self.width = width
         self.height = height
+        self.sand = None
         self.clear()
 
     def add_sand_circle(self, center_x, center_y, radius):

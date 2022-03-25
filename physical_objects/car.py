@@ -15,8 +15,8 @@ class Car:
 
     def __init__(self, position_x: int, position_y: int):
         # position is the center of the front of the car
-        self.position_x = position_x
-        self.position_y = position_y
+        self.position_x: float = position_x
+        self.position_y: float = position_y
         # angle between x-axis and front of car - 0 means facing left
         self.angle_deg: int = 0
 
@@ -31,7 +31,7 @@ class Car:
 
         # rotate
         movement_vector = self.rotateVectorClockwise(movement_vector, self.angle_deg)
-        print(movement_vector)
+        # print(movement_vector)
 
         self.position_x = self.position_x + movement_vector[0]
         self.position_y = self.position_y + movement_vector[1]
