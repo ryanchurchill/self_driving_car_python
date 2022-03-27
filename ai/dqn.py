@@ -8,12 +8,12 @@ import torch.nn.functional as F
 from torch.autograd import Variable
 
 class Dqn(object):
-    def __init__(self, input_size: int, output_size: int, gamma):
-        self.gamma = gamma
-        self.model = Network(input_size, output_size)
-        self.memory = ReplayMemory(capacity = 100000)
-        self.optimizer = optim.Adam(params = self.model.parameters())
-        self.last_state = torch.Tensor(input_size).unsqueeze(0)
+    def __init__(self, input_size: int, output_size: int, gamma: float):
+        self.gamma: float = gamma
+        self.model: Network = Network(input_size, output_size)
+        self.memory: ReplayMemory = ReplayMemory(capacity = 100000)
+        self.optimizer: optim.Adam = optim.Adam(params = self.model.parameters())
+        self.last_state: torch.Tensor = torch.Tensor(input_size).unsqueeze(0)
         self.last_action = 0
         self.last_reward = 0
 
@@ -32,12 +32,13 @@ class Dqn(object):
         self.optimizer.step()
 
     def update(self, new_state, new_reward):
-        new_state = torch.Tensor(new_state).float().unsqueeze()
-        self.memory.push(
+        new_state = torch.Tensor(new_state).float().unsqueeze(0)
+        self.memory.push((
             self.last_state,
             torch.LongTensor([int(self.last_action)]),
-            torch.Tensor([self.last_reward]), new_state
-        )
+            torch.Tensor([self.last_reward]),
+            new_state
+        ))
         new_action = self.select_action(new_state)
         if (len(self.memory.memory) > 100):
             batch_states, batch_actions, batch_rewards, batch_next_states = self.memory.sample(100)

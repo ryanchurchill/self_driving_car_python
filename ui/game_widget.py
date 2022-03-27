@@ -105,15 +105,12 @@ class GameWidget(QWidget):
         # print('Key Pressed: ' + str(event.key()))
         if event.key() == QtCore.Qt.Key_W:
             self.move_car(CarMove.FORWARD)
-            self.repaint()
             #test
             # self.sand.add_sand_circle(700, 200, 30)
         if event.key() == QtCore.Qt.Key_A:
             self.move_car(CarMove.LEFT)
-            self.repaint()
         if event.key() == QtCore.Qt.Key_D:
             self.move_car(CarMove.RIGHT)
-            self.repaint()
 
     def handleMouseMoveEvent(self, event: QtGui.QMouseEvent) -> None:
         # todo: this implementation is way too slow
@@ -136,6 +133,8 @@ class GameWidget(QWidget):
             self.car.speed = Car.DEFAULT_SPEED
 
         self.car.makeMove(move)
+        self.repaint()
+        print(move)
 
     def is_car_on_sand(self) -> bool:
         return self.sand.sand[int(self.car.position_x)][int(self.car.position_y)] > 0
@@ -156,8 +155,11 @@ class GameWidget(QWidget):
         # next_move = self.ai.decide_next_move()
         # self.car.makeMove(next_move)
         # self.repaint()
-        self.ai.decide_next_move(
+        move = self.ai.decide_next_move(
             self.get_sensor_value(SensorType.LEFT),
             self.get_sensor_value(SensorType.MIDDLE),
-            self.get_sensor_value(SensorType.RIGHT))
+            self.get_sensor_value(SensorType.RIGHT),
+            self.is_car_on_sand())
+        # print(move)
+        self.move_car(move)
 

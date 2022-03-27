@@ -1,6 +1,7 @@
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
+from torch import Tensor
 
 class Network(nn.Module):
 	HIDDEN_LAYER_NODE_COUNT = 30
@@ -17,5 +18,5 @@ class Network(nn.Module):
 	# state: input state vector
 	def forward(self, state):
 		tensor: Tensor = F.relu(self.fc1(state))
-		q_values = self.fc2(x)
+		q_values = self.fc2(tensor)
 		return q_values

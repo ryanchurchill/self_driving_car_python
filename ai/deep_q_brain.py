@@ -1,11 +1,11 @@
-import random
 from physical_objects.car import Car
 from physical_objects.car_move import CarMove
 from physical_objects.sand import Sand
 from physical_objects.sensor_type import SensorType
 from util.math_util import MathUtil
 from util.point import Point
-from ai.network import Network
+from ai.dqn import Dqn
+import numpy as np
 
 # Input States:
 # 0 => Orientation
@@ -32,18 +32,47 @@ class DeepQBrain:
         self.goals: list = goals
         self.current_goal: Point = self.goals[0]
 
-        self.network = Network(4, 3)
+        self.dqn_brain = Dqn(4, 3, 0.9)
 
-    def decide_next_move(self, signal_left: float, signal_forward: float, signal_right: float):
+        self.last_distance = -1
+
+    def decide_next_move(self, signal_left: float, signal_forward: float, signal_right: float, is_car_on_sand: bool):
+        current_state = [self.calculate_orientation(), signal_left, signal_forward, signal_right]
+        current_distance = self.calculate_distance()
+        current_reward = self.calculate_reward(current_distance, is_car_on_sand)
+        next_action = self.dqn_brain.update(current_state, current_reward)
+
+        self.last_distance = current_distance
+
+        # print(int(next_action))
+        # return next_action
+
         print('Input states..')
         print('Orientation: ' + str(self.calculate_orientation()))
         print('Left Signal: ' + str(signal_left))
         print('Middle Signal: ' + str(signal_forward))
         print('Right Signal: ' + str(signal_right))
+        print('Current Distance: ' + str(current_distance))
+        print('Current Reward: ' + str(current_reward))
+
+        return CarMove(int(next_action))
 
     def calculate_orientation(self):
         car_to_goal_vector = Point(self.current_goal.x - self.car.position_x, self.current_goal.y - self.car.position_y)
         car_position_vector = self.car.getSensorVector(SensorType.MIDDLE)
         return MathUtil.rotation_between_vectors_deg(car_position_vector, car_to_goal_vector)
+
+    def calculate_distance(self):
+        return np.sqrt((self.car.position_x - self.current_goal.x)**2 + (self.car.position_y - self.current_goal.y)**2)
+
+    def calculate_reward(self, current_distance, car_is_on_sand) -> float:
+        if self.last_distance == -1:
+            return 0
+        if car_is_on_sand:
+            return -1
+        # TODO: border check
+        if current_distance < self.last_distance:
+            return .1
+        return -.2
 
 

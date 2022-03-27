@@ -50,6 +50,8 @@ class Car:
             self.__rotateRight()
         elif move == CarMove.FORWARD:
             self.__moveForward()
+        else:
+            print('Error!! makeMove for invalid CarMove')
 
     def setAngleDeg(self, angle_deg):
         self.angle_deg = angle_deg

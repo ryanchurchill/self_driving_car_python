@@ -2,6 +2,7 @@
 
 import torch
 from torch.autograd import Variable
+import random
 
 class ReplayMemory(object):
     def __init__(self, capacity: int):
