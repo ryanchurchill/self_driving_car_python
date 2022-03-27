@@ -67,7 +67,7 @@ class ButtonWidget(QWidget):
 
     def btn_start_brain_clicked(self):
         if self.brain_on == False:
-            self.game_widget.ai_timer.start(100)
+            self.game_widget.ai_timer.start(10)
             self.brain_on = True
 
     def btn_pause_brain_clicked(self):

@@ -48,8 +48,8 @@ class GameWidget(QWidget):
     # DRAWING
     def paintEvent(self, e):
         # print('paintEvent')
-        # self.drawCar()
         self.drawSand()
+        self.drawCar()
         # pass
 
     def drawCar(self):
