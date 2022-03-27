@@ -81,4 +81,5 @@ class ButtonWidget(QWidget):
 
     def btn_load_sand_clicked(self):
         self.game_widget.sand.load_from_file()
+        self.game_widget.drawOntoSandPixmap()
         self.game_widget.repaint()

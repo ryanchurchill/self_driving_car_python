@@ -29,6 +29,10 @@ class GameWidget(QWidget):
         self.game_width = game_width
         self.game_height = game_height
 
+        # sand bitmap
+        self.sand_pixmap = QtGui.QPixmap(self.game_width, self.game_height)
+        self.sand_pixmap.fill(QColor('black'))
+
         # make background black
         self.setAutoFillBackground(True)
         palette = self.palette()
@@ -44,7 +48,7 @@ class GameWidget(QWidget):
     # DRAWING
     def paintEvent(self, e):
         # print('paintEvent')
-        self.drawCar()
+        # self.drawCar()
         self.drawSand()
         # pass
 
@@ -88,7 +92,13 @@ class GameWidget(QWidget):
             self.car.SENSOR_RADIUS * 2)
 
     def drawSand(self):
-        qp = QPainter()
+        paint = QtGui.QPainter()
+        paint.begin(self)
+        paint.drawPixmap(0, 0, self.sand_pixmap)
+        paint.end()
+
+    def drawOntoSandPixmap(self):
+        qp = QPainter(self.sand_pixmap)
         qp.begin(self)
 
         color = QColor('yellow')
@@ -117,6 +127,7 @@ class GameWidget(QWidget):
     def handleMouseMoveEvent(self, event: QtGui.QMouseEvent) -> None:
         # todo: this implementation is way too slow
         self.sand.add_sand_circle(event.x(), event.y(), self.SAND_PAINTER_RADIUS)
+        self.drawOntoSandPixmap()
         self.repaint()
 
     def button_pressed(self):
