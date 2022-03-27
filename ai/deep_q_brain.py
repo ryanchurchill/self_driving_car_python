@@ -5,6 +5,7 @@ from physical_objects.sand import Sand
 from physical_objects.sensor_type import SensorType
 from util.math_util import MathUtil
 from util.point import Point
+from ai.network import Network
 
 # Input States:
 # 0 => Orientation
@@ -30,6 +31,8 @@ class DeepQBrain:
         self.sand = sand
         self.goals: list = goals
         self.current_goal: Point = self.goals[0]
+
+        self.network = Network(4, 3)
 
     def decide_next_move(self, signal_left: float, signal_forward: float, signal_right: float):
         print('Input states..')
