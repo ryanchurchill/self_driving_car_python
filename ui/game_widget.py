@@ -175,18 +175,15 @@ class GameWidget(QWidget):
     # BRAIN HANDLING
 
     def make_next_brain_move(self):
-        # next_move = self.ai.decide_next_move()
-        # self.car.makeMove(next_move)
-        # self.repaint()
-        # move = self.ai.decide_next_move(
-        #     self.get_sensor_value(SensorType.LEFT),
-        #     self.get_sensor_value(SensorType.MIDDLE),
-        #     self.get_sensor_value(SensorType.RIGHT),
-        #     self.is_car_on_sand(),
-        #     self.is_car_out_of_bounds())
-        # print(move)
+        move = self.ai.decide_next_move(
+            self.get_sensor_value(SensorType.LEFT),
+            self.get_sensor_value(SensorType.MIDDLE),
+            self.get_sensor_value(SensorType.RIGHT),
+            self.is_car_on_sand(),
+            self.is_car_out_of_bounds())
+        print(move)
 
-        move = self.random_ai.decide_next_move()
+        # move = self.random_ai.decide_next_move()
 
         self.move_car(move)
 
