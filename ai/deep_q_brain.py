@@ -36,10 +36,10 @@ class DeepQBrain:
 
         self.last_distance = -1
 
-    def decide_next_move(self, signal_left: float, signal_forward: float, signal_right: float, is_car_on_sand: bool):
+    def decide_next_move(self, signal_left: float, signal_forward: float, signal_right: float, is_car_on_sand: bool, is_car_out_of_bounds: bool):
         current_state = [self.calculate_orientation(), signal_left, signal_forward, signal_right]
         current_distance = self.calculate_distance()
-        current_reward = self.calculate_reward(current_distance, is_car_on_sand)
+        current_reward = self.calculate_reward(current_distance, is_car_on_sand, is_car_out_of_bounds)
         next_action = self.dqn_brain.update(current_state, current_reward)
 
         self.last_distance = current_distance
@@ -65,12 +65,11 @@ class DeepQBrain:
     def calculate_distance(self):
         return np.sqrt((self.car.position_x - self.current_goal.x)**2 + (self.car.position_y - self.current_goal.y)**2)
 
-    def calculate_reward(self, current_distance, car_is_on_sand) -> float:
+    def calculate_reward(self, current_distance, is_car_on_sand, is_car_out_of_bounds) -> float:
         if self.last_distance == -1:
             return 0
-        if car_is_on_sand:
+        if is_car_on_sand or is_car_out_of_bounds:
             return -1
-        # TODO: border check
         if current_distance < self.last_distance:
             return .1
         return -.2

@@ -26,6 +26,8 @@ class GameWidget(QWidget):
         super(GameWidget, self).__init__()
         self.car = Car(50, 50)
         self.sand = Sand(game_width, game_height)
+        self.game_width = game_width
+        self.game_height = game_height
 
         # make background black
         self.setAutoFillBackground(True)
@@ -36,7 +38,7 @@ class GameWidget(QWidget):
         # ai timer
         self.ai_timer = QTimer()
         self.ai_timer.timeout.connect(self.make_next_brain_move)
-        # self.ai = RandomBrain(self.car, self.sand)
+        self.random_ai = RandomBrain(self.car, self.sand)
         self.ai = DeepQBrain(self.car, self.sand, [Point(game_width, game_height)])
 
     # DRAWING
@@ -127,6 +129,9 @@ class GameWidget(QWidget):
     def move_car(self, move: CarMove):
         # mess with car if it's on sand
         # this just slows it down, but the tutorial also changes its angle
+        # if self.is_car_out_of_bounds():
+        #     self.car.speed = 0
+        # doesn't work - freezes car forever
         if self.is_car_on_sand():
             self.car.speed = Car.SAND_SPEED
         else:
@@ -138,6 +143,13 @@ class GameWidget(QWidget):
 
     def is_car_on_sand(self) -> bool:
         return self.sand.sand[int(self.car.position_x)][int(self.car.position_y)] > 0
+
+    def is_car_out_of_bounds(self) -> bool:
+        return self.car.position_x < 0 or \
+               self.car.position_x > self.game_width or \
+               self.car.position_y < 0 or \
+               self.car.position_y > self.game_width
+
 
     #normalized to 0->1
     def get_sensor_value(self, sensor_type: SensorType) -> float :
@@ -155,11 +167,15 @@ class GameWidget(QWidget):
         # next_move = self.ai.decide_next_move()
         # self.car.makeMove(next_move)
         # self.repaint()
-        move = self.ai.decide_next_move(
-            self.get_sensor_value(SensorType.LEFT),
-            self.get_sensor_value(SensorType.MIDDLE),
-            self.get_sensor_value(SensorType.RIGHT),
-            self.is_car_on_sand())
+        # move = self.ai.decide_next_move(
+        #     self.get_sensor_value(SensorType.LEFT),
+        #     self.get_sensor_value(SensorType.MIDDLE),
+        #     self.get_sensor_value(SensorType.RIGHT),
+        #     self.is_car_on_sand(),
+        #     self.is_car_out_of_bounds())
         # print(move)
+
+        move = self.random_ai.decide_next_move()
+
         self.move_car(move)
 
