@@ -55,8 +55,22 @@ class GameWidget(QWidget):
     def paintEvent(self, e):
         # print('paintEvent')
         self.drawSand()
+        self.drawGoal()
         self.drawCar()
         # pass
+
+    def drawGoal(self):
+        radius = 50;
+        qp = QPainter()
+        qp.begin(self)
+        qp.setPen(QColor('Orange'))
+        qp.setBrush(QColor('Orange'))
+        qp.drawEllipse(
+            self.current_goal.x - radius,
+            self.current_goal.y - radius,
+            radius * 2,
+            radius * 2)
+        qp.end()
 
     def drawCar(self):
         qp = QPainter()
