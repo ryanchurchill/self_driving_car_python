@@ -30,19 +30,23 @@ class DeepQBrain:
         self.car = car
         self.sand = sand
         self.goals: list = goals
-        self.current_goal: Point = self.goals[0]
+
+        self.current_goal_index = 0
+        self.current_goal: Point = self.goals[self.current_goal_index]
 
         self.dqn_brain = Dqn(4, 3, 0.9)
 
         self.last_distance = -1
+        self.last_action = -1
 
     def decide_next_move(self, signal_left: float, signal_forward: float, signal_right: float, is_car_on_sand: bool, is_car_out_of_bounds: bool):
         current_state = [self.calculate_orientation(), signal_left, signal_forward, signal_right]
         current_distance = self.calculate_distance()
         current_reward = self.calculate_reward(current_distance, is_car_on_sand, is_car_out_of_bounds)
-        next_action = self.dqn_brain.update(current_state, current_reward)
+        next_action = CarMove(int(self.dqn_brain.update(current_state, current_reward)))
 
         self.last_distance = current_distance
+        self.last_action = next_action
 
         # print(int(next_action))
         # return next_action
@@ -55,7 +59,7 @@ class DeepQBrain:
         print('Current Distance: ' + str(current_distance))
         print('Current Reward: ' + str(current_reward))
 
-        return CarMove(int(next_action))
+        return next_action
 
     def calculate_orientation(self):
         car_to_goal_vector = Point(self.current_goal.x - self.car.position_x, self.current_goal.y - self.car.position_y)
@@ -68,10 +72,26 @@ class DeepQBrain:
     def calculate_reward(self, current_distance, is_car_on_sand, is_car_out_of_bounds) -> float:
         if self.last_distance == -1:
             return 0
-        if is_car_on_sand or is_car_out_of_bounds:
+        if self.is_at_goal():
+            self.activate_next_goal()
+            print('Goal!')
+            return .1
+        # if last action was to move forward, but car didn't move forward, assume collision with wall
+        if self.last_action == CarMove.FORWARD and self.last_distance == current_distance:
+            return -1
+        if is_car_on_sand or is_car_out_of_bounds: #is_car_out_of_bounds might be covered by last condition
             return -1
         if current_distance < self.last_distance:
             return .1
         return -.2
 
+    def activate_next_goal(self):
+        goal_count = len(self.goals)
+        self.current_goal_index = self.current_goal_index + 1 % goal_count
+        self.current_goal = self.goals[self.current_goal_index]
 
+    def is_at_goal(self):
+        return self.car.position_x > self.current_goal.x - 10 and \
+            self.car.position_x < self.current_goal.x + 10 and \
+            self.car.position_y > self.current_goal.y - 10 and \
+            self.car.position_y < self.current_goal.y + 10

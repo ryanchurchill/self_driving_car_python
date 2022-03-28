@@ -24,7 +24,7 @@ class GameWidget(QWidget):
 
     def __init__(self, game_width, game_height):
         super(GameWidget, self).__init__()
-        self.car = Car(50, 50)
+        self.car = Car(50, 50, game_width, game_height)
         self.sand = Sand(game_width, game_height)
         self.game_width = game_width
         self.game_height = game_height
@@ -99,7 +99,7 @@ class GameWidget(QWidget):
 
     def drawOntoSandPixmap(self):
         qp = QPainter(self.sand_pixmap)
-        qp.begin(self)
+        # qp.begin(self)
 
         color = QColor('yellow')
         qp.setPen(color)
@@ -140,9 +140,6 @@ class GameWidget(QWidget):
     def move_car(self, move: CarMove):
         # mess with car if it's on sand
         # this just slows it down, but the tutorial also changes its angle
-        # if self.is_car_out_of_bounds():
-        #     self.car.speed = 0
-        # doesn't work - freezes car forever
         if self.is_car_on_sand():
             self.car.speed = Car.SAND_SPEED
         else:
@@ -156,10 +153,7 @@ class GameWidget(QWidget):
         return self.sand.sand[int(self.car.position_x)][int(self.car.position_y)] > 0
 
     def is_car_out_of_bounds(self) -> bool:
-        return self.car.position_x < 0 or \
-               self.car.position_x > self.game_width or \
-               self.car.position_y < 0 or \
-               self.car.position_y > self.game_width
+        return self.car.is_position_out_of_bounds(Point(self.car.position_x, self.car.position_y))
 
 
     #normalized to 0->1

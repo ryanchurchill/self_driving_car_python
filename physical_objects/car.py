@@ -14,10 +14,12 @@ class Car:
     SENSOR_DISTANCE = 15
     SENSOR_RADIUS = 4
 
-    def __init__(self, position_x: int, position_y: int):
+    def __init__(self, position_x: int, position_y: int, game_width: int, game_height: int):
         # position is the center of the front of the car
         self.position_x: float = position_x
         self.position_y: float = position_y
+        self.game_width = game_width
+        self.game_height = game_height
         # angle between x-axis and front of car - 0 means facing left
         self.angle_deg: int = 0
 
@@ -34,8 +36,14 @@ class Car:
         movement_vector = MathUtil.rotate_vector_clockwise(movement_vector, self.angle_deg)
         # print(movement_vector)
 
-        self.position_x = self.position_x + movement_vector.x
-        self.position_y = self.position_y + movement_vector.y
+        new_x = self.position_x + movement_vector.x
+        new_y = self.position_y + movement_vector.y
+
+        if self.is_position_out_of_bounds(Point(new_x, new_y)):
+            return
+
+        self.position_x = new_x
+        self.position_y = new_y
 
     def __rotateLeft(self):
         self.setAngleDeg(self.angle_deg - self.ROTATION_INCREMENT_DEG)
@@ -77,7 +85,11 @@ class Car:
 
         return MathUtil.rotate_vector_clockwise(sensor_vector, (self.angle_deg + additional_angle_deg))
 
-
+    def is_position_out_of_bounds(self, point: Point) -> bool:
+        return point.x < 0 or \
+            point.x > self.game_width or \
+            point.y < 0 or \
+            point.y > self.game_height
 
 
 
