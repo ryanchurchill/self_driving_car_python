@@ -10,6 +10,7 @@ from physical_objects.sand import Sand
 from physical_objects.sensor_type import SensorType
 from physical_objects.car_move import CarMove
 from util.point import Point
+from util.math_util import MathUtil
 
 import numpy as np
 
@@ -30,6 +31,10 @@ class GameWidget(QWidget):
         self.game_height = game_height
         self.last_move_wall_collision = False
 
+        self.goals: list = [Point(game_width, game_height), Point(0,0)]
+        self.current_goal_index = 0
+        self.current_goal: Point = self.goals[self.current_goal_index]
+
         # sand bitmap
         self.sand_pixmap = QtGui.QPixmap(self.game_width, self.game_height)
         self.sand_pixmap.fill(QColor('black'))
@@ -44,7 +49,7 @@ class GameWidget(QWidget):
         self.ai_timer = QTimer()
         self.ai_timer.timeout.connect(self.make_next_brain_move)
         self.random_ai = RandomBrain(self.car, self.sand)
-        self.ai = DeepQBrain(self.car, self.sand, [Point(game_width, game_height), Point(0,0)])
+        self.ai = DeepQBrain(self.car, self.sand)
 
     # DRAWING
     def paintEvent(self, e):
@@ -183,19 +188,42 @@ class GameWidget(QWidget):
             int(sensor_position.y)-10:int(sensor_position.y)+10])
         )/400
 
+    # GOAL HANDLING
+    def activate_next_goal(self):
+        print('Goal!')
+        goal_count = len(self.goals)
+        self.current_goal_index = (self.current_goal_index + 1) % goal_count
+        self.current_goal = self.goals[self.current_goal_index]
+
+    def is_at_goal(self):
+        return self.calculate_distance_from_car_to_goal() < 50
+
+    def calculate_distance_from_car_to_goal(self):
+        return np.sqrt((self.car.position_x - self.current_goal.x)**2 + (self.car.position_y - self.current_goal.y)**2)
+
+    def calculate_orientation_from_car_to_goal(self):
+        car_to_goal_vector = Point(self.current_goal.x - self.car.position_x, self.current_goal.y - self.car.position_y)
+        car_position_vector = self.car.getSensorVector(SensorType.MIDDLE)
+        return MathUtil.rotation_between_vectors_deg(car_position_vector, car_to_goal_vector)
+
     # BRAIN HANDLING
 
     def make_next_brain_move(self):
+        is_car_at_goal = self.is_at_goal()
+
         move = self.ai.decide_next_move(
             self.get_sensor_value(SensorType.LEFT),
             self.get_sensor_value(SensorType.MIDDLE),
             self.get_sensor_value(SensorType.RIGHT),
             self.is_car_on_sand(),
-            self.last_move_wall_collision
+            self.last_move_wall_collision,
+            is_car_at_goal,
+            self.calculate_distance_from_car_to_goal(),
+            self.calculate_orientation_from_car_to_goal()
         )
         # print(move)
 
-        # move = self.random_ai.decide_next_move()
-
         self.last_move_wall_collision = self.move_car(move)
 
+        if is_car_at_goal:
+            self.activate_next_goal()
