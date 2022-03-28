@@ -118,6 +118,7 @@ class GameWidget(QWidget):
         paint.end()
 
     def drawOntoSandPixmap(self):
+        self.sand_pixmap.fill(QColor('black'))
         qp = QPainter(self.sand_pixmap)
         # qp.begin(self)
 
