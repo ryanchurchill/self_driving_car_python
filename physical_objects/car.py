@@ -39,8 +39,8 @@ class Car:
         new_x = self.position_x + movement_vector.x
         new_y = self.position_y + movement_vector.y
 
-        if self.is_position_out_of_bounds(Point(new_x, new_y)):
-            return
+        # if self.is_position_out_of_bounds(Point(new_x, new_y)):
+        #     return
 
         self.position_x = new_x
         self.position_y = new_y

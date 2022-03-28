@@ -28,6 +28,7 @@ class GameWidget(QWidget):
         self.sand = Sand(game_width, game_height)
         self.game_width = game_width
         self.game_height = game_height
+        self.last_move_wall_collision = False
 
         # sand bitmap
         self.sand_pixmap = QtGui.QPixmap(self.game_width, self.game_height)
@@ -137,7 +138,8 @@ class GameWidget(QWidget):
         self.game_widget.repaint()
 
     # CAR HANDLING / SENSING - consider moving these to Car and pass sand to the methods
-    def move_car(self, move: CarMove):
+    # returns true if wall collision occured
+    def move_car(self, move: CarMove) -> bool:
         # mess with car if it's on sand
         # this just slows it down, but the tutorial also changes its angle
         if self.is_car_on_sand():
@@ -146,15 +148,30 @@ class GameWidget(QWidget):
             self.car.speed = Car.DEFAULT_SPEED
 
         self.car.makeMove(move)
+
+        wall_collision = False
+        if self.car.position_x < 10:
+            self.car.position_x = 10
+            wall_collision = True
+        if self.car.position_x > self.game_width - 10:
+            self.car.position_x = self.game_width - 10
+            wall_collision = True
+        if self.car.position_y < 10:
+            self.car.position_y = 10
+            wall_collision = True
+        if self.car.position_y > self.game_height - 10:
+            self.car.position_y = self.game_height - 10
+            wall_collision = True
+
         self.repaint()
         print(move)
+        return wall_collision
 
     def is_car_on_sand(self) -> bool:
         return self.sand.sand[int(self.car.position_x)][int(self.car.position_y)] > 0
 
     def is_car_out_of_bounds(self) -> bool:
         return self.car.is_position_out_of_bounds(Point(self.car.position_x, self.car.position_y))
-
 
     #normalized to 0->1
     def get_sensor_value(self, sensor_type: SensorType) -> float :
@@ -174,10 +191,11 @@ class GameWidget(QWidget):
             self.get_sensor_value(SensorType.MIDDLE),
             self.get_sensor_value(SensorType.RIGHT),
             self.is_car_on_sand(),
-            self.is_car_out_of_bounds())
+            self.last_move_wall_collision
+        )
         # print(move)
 
         # move = self.random_ai.decide_next_move()
 
-        self.move_car(move)
+        self.last_move_wall_collision = self.move_car(move)
 
