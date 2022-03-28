@@ -87,11 +87,12 @@ class DeepQBrain:
 
     def activate_next_goal(self):
         goal_count = len(self.goals)
-        self.current_goal_index = self.current_goal_index + 1 % goal_count
+        self.current_goal_index = (self.current_goal_index + 1) % goal_count
         self.current_goal = self.goals[self.current_goal_index]
 
     def is_at_goal(self):
-        return self.car.position_x > self.current_goal.x - 10 and \
-            self.car.position_x < self.current_goal.x + 10 and \
-            self.car.position_y > self.current_goal.y - 10 and \
-            self.car.position_y < self.current_goal.y + 10
+        # return self.car.position_x > self.current_goal.x - 10 and \
+        #     self.car.position_x < self.current_goal.x + 10 and \
+        #     self.car.position_y > self.current_goal.y - 10 and \
+        #     self.car.position_y < self.current_goal.y + 10
+        return self.calculate_distance() < 100

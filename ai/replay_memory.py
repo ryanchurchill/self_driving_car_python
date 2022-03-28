@@ -1,17 +1,22 @@
 # Implementing Experience Replay
 
-import torch
-from torch.autograd import Variable
+import os
 import random
+import torch
+import torch.nn as nn
+import torch.nn.functional as F
+import torch.optim as optim
+from torch.autograd import Variable
 
 class ReplayMemory(object):
-    def __init__(self, capacity: int):
-        self.capacity: int = capacity
+
+    def __init__(self, capacity):
+        self.capacity = capacity
         self.memory = []
 
     def push(self, event):
         self.memory.append(event)
-        if (len(self.memory) > self.capacity):
+        if len(self.memory) > self.capacity:
             del self.memory[0]
 
     def sample(self, batch_size):

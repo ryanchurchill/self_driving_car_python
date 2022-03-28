@@ -1,22 +1,23 @@
+# Creating the architecture of the Neural Network
+
+import os
+import random
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
-from torch import Tensor
+import torch.optim as optim
+from torch.autograd import Variable
 
 class Network(nn.Module):
-	HIDDEN_LAYER_NODE_COUNT = 30
 
-	def __init__(self, input_size: int, output_size: int):
-		super(Network, self).__init__()
-		self.input_size: int = input_size
-		self.output_size: int = output_size
-		# connections between input layer and hidden layer
-		self.fc1 = nn.Linear(input_size, self.HIDDEN_LAYER_NODE_COUNT)
-		# connections between hidden layer and output layer
-		self.fc2 = nn.Linear(30, output_size)
+    def __init__(self, input_size, nb_action):
+        super(Network, self).__init__()
+        self.input_size = input_size
+        self.nb_action = nb_action
+        self.fc1 = nn.Linear(input_size, 30)
+        self.fc2 = nn.Linear(30, nb_action)
 
-	# state: input state vector
-	def forward(self, state):
-		tensor: Tensor = F.relu(self.fc1(state))
-		q_values = self.fc2(tensor)
-		return q_values
+    def forward(self, state):
+        x = F.relu(self.fc1(state))
+        q_values = self.fc2(x)
+        return q_values
