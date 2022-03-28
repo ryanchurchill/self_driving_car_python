@@ -43,7 +43,7 @@ class GameWidget(QWidget):
         self.ai_timer = QTimer()
         self.ai_timer.timeout.connect(self.make_next_brain_move)
         self.random_ai = RandomBrain(self.car, self.sand)
-        self.ai = DeepQBrain(self.car, self.sand, [Point(game_width, game_height)])
+        self.ai = DeepQBrain(self.car, self.sand, [Point(game_width, game_height), Point(0,0)])
 
     # DRAWING
     def paintEvent(self, e):
@@ -175,7 +175,7 @@ class GameWidget(QWidget):
             self.get_sensor_value(SensorType.RIGHT),
             self.is_car_on_sand(),
             self.is_car_out_of_bounds())
-        print(move)
+        # print(move)
 
         # move = self.random_ai.decide_next_move()
 

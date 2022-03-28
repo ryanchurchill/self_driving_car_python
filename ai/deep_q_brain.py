@@ -26,7 +26,7 @@ import numpy as np
 # - Moving toward destination:      +.1
 
 class DeepQBrain:
-    def __init__(self, car: Car, sand: Sand, goals: list[Point]):
+    def __init__(self, car: Car, sand: Sand, goals: list):
         self.car = car
         self.sand = sand
         self.goals: list = goals

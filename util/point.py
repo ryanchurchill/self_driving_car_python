@@ -3,5 +3,5 @@ class Point:
         self.x: float = x
         self.y: float = y
 
-    def get_list(self) -> list[float]:
+    def get_list(self) -> list:
         return self.x, self.y

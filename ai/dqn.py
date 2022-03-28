@@ -8,6 +8,8 @@ import torch.nn.functional as F
 from torch.autograd import Variable
 
 class Dqn(object):
+    BATCH_SIZE = 100
+
     def __init__(self, input_size: int, output_size: int, gamma: float):
         self.gamma: float = gamma
         self.model: Network = Network(input_size, output_size)
@@ -16,6 +18,7 @@ class Dqn(object):
         self.last_state: torch.Tensor = torch.Tensor(input_size).unsqueeze(0)
         self.last_action = 0
         self.last_reward = 0
+        self.move_number = 0
 
     def select_action(self, state):
         probs = F.softmax(self.model.forward(Variable(state))*100)
@@ -33,6 +36,7 @@ class Dqn(object):
         self.optimizer.step()
 
     def update(self, new_state, new_reward):
+        self.move_number += 1
         new_state = torch.Tensor(new_state).float().unsqueeze(0)
         self.memory.push((
             self.last_state,
@@ -41,8 +45,9 @@ class Dqn(object):
             new_state
         ))
         new_action = self.select_action(new_state)
-        if (len(self.memory.memory) > 100):
-            batch_states, batch_actions, batch_rewards, batch_next_states = self.memory.sample(100)
+        if (len(self.memory.memory) > self.BATCH_SIZE \
+                and self.move_number % self.BATCH_SIZE == 0):
+            batch_states, batch_actions, batch_rewards, batch_next_states = self.memory.sample(self.BATCH_SIZE)
             self.learn(batch_states, batch_actions, batch_rewards, batch_next_states)
         self.last_state = new_state
         self.last_action = new_action

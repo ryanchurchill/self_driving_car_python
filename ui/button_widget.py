@@ -11,6 +11,8 @@ class ButtonWidget(QWidget):
         self.brain_on = False
 
         layout = QHBoxLayout(self)
+        # self.setFixedHeight(height)
+        layout.setContentsMargins(0,0,0,0)
 
         buttons = []
 
@@ -43,20 +45,6 @@ class ButtonWidget(QWidget):
         for button in buttons:
             button.setFixedHeight(height)
             layout.addWidget(button)
-
-        # btn_play.setFixedHeight(height)
-        # btn_play.setFixedHeight(height)
-        # btn_play.setFixedHeight(height)
-        # btn_play.setFixedHeight(height)
-        # btn_play.setFixedHeight(height)
-        # btn_play.setFixedHeight(height)
-        #
-        # layout.addWidget(btn_play)
-        # layout.addWidget(btn_pause)
-        # layout.addWidget(btn_save_brain)
-        # layout.addWidget(btn_load_brain)
-        # layout.addWidget(btn_save_sand)
-        # layout.addWidget(btn_load_sand)
 
         # make background blue
         # container = QWidget
