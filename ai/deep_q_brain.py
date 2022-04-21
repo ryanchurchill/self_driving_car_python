@@ -50,14 +50,16 @@ class DeepQBrain:
     ):
         #divide orientation_to_goal by 180 to normalize it, I think..
         current_state = [orientation_to_goal/180, signal_left, signal_forward, signal_right]
-        current_reward = self.calculate_reward(distance_to_goal, is_car_on_sand, last_move_wall_collision, is_at_goal)
+        last_reward = self.calculate_reward(distance_to_goal, is_car_on_sand, last_move_wall_collision, is_at_goal)
+
+        next_action = CarMove(int(self.dqn_brain.update(current_state, last_reward)))
 
         self.counter += 1
-        print('Counter: ' + str(self.counter))
-        print('Current state: ' + str(current_state))
-        print('Current reward: ' + str(current_reward))
-
-        next_action = CarMove(int(self.dqn_brain.update(current_state, current_reward)))
+        print('Move #: ' + str(self.counter))
+        print('Last state: ' + str(current_state))
+        print('Last reward: ' + str(last_reward))
+        print('Next move: ' + str(next_action))
+        print('Last Distance: ' + str(distance_to_goal))
 
         # if (current_reward == -1):
         #     print("-1 reward for action: " + str(self.last_action))
