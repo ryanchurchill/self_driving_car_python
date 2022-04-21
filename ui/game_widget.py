@@ -146,8 +146,13 @@ class GameWidget(QWidget):
             self.move_car(CarMove.RIGHT)
 
     def handleMouseMoveEvent(self, event: QtGui.QMouseEvent) -> None:
+        print('move event')
         # todo: this implementation is way too slow
         self.sand.add_sand_circle(event.x(), event.y(), self.SAND_PAINTER_RADIUS)
+
+
+    def handleMouseReleaseEvent(self, event: QtGui.QMouseEvent) -> None:
+        print('release event')
         self.drawOntoSandPixmap()
         self.repaint()
 

@@ -40,3 +40,6 @@ class MainWindow(QMainWindow):
 
     def mouseMoveEvent(self, event: QtGui.QMouseEvent) -> None:
         self.game_widget.handleMouseMoveEvent(event)
+
+    def mouseReleaseEvent(self, event: QtGui.QMouseEvent) -> None:
+        self.game_widget.handleMouseReleaseEvent(event)
