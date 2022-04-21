@@ -52,9 +52,12 @@ class Car:
         self.setAngleDeg(self.angle_deg + self.ROTATION_INCREMENT_DEG)
 
     def makeMove(self, move: CarMove):
+        #TODO: a turn isn't simply an angle adjustment - velocity should continue to move car forward
         if move == CarMove.LEFT:
+            self.__moveForward()
             self.__rotateLeft()
         elif move == CarMove.RIGHT:
+            self.__moveForward()
             self.__rotateRight()
         elif move == CarMove.FORWARD:
             self.__moveForward()

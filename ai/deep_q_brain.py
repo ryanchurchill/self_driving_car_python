@@ -35,6 +35,8 @@ class DeepQBrain:
         self.last_distance = -1
         self.last_action = -1
 
+        self.counter = 0
+
     def decide_next_move(
             self,
             signal_left: float,
@@ -46,8 +48,15 @@ class DeepQBrain:
             distance_to_goal: float,
             orientation_to_goal: float
     ):
-        current_state = [orientation_to_goal, signal_left, signal_forward, signal_right]
+        #divide orientation_to_goal by 180 to normalize it, I think..
+        current_state = [orientation_to_goal/180, signal_left, signal_forward, signal_right]
         current_reward = self.calculate_reward(distance_to_goal, is_car_on_sand, last_move_wall_collision, is_at_goal)
+
+        self.counter += 1
+        print('Counter: ' + str(self.counter))
+        print('Current state: ' + str(current_state))
+        print('Current reward: ' + str(current_reward))
+
         next_action = CarMove(int(self.dqn_brain.update(current_state, current_reward)))
 
         # if (current_reward == -1):
@@ -60,12 +69,14 @@ class DeepQBrain:
         # return next_action
 
         # print('Input states..')
-        print('Orientation: ' + str(orientation_to_goal))
+        # print('Orientation: ' + str(orientation_to_goal))
         # print('Left Signal: ' + str(signal_left))
         # print('Middle Signal: ' + str(signal_forward))
         # print('Right Signal: ' + str(signal_right))
-        print('Current Distance: ' + str(distance_to_goal))
-        print('Current Reward: ' + str(current_reward))
+        # print('Current Distance: ' + str(distance_to_goal))
+        # print('Current Reward: ' + str(current_reward))
+
+
 
         return next_action
 
